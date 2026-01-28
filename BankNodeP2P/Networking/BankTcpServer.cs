@@ -1,12 +1,6 @@
 ﻿using BankNodeP2P.Protocol;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BankNodeP2P.Networking
 {
@@ -22,10 +16,12 @@ namespace BankNodeP2P.Networking
 
         public BankTcpServer(
             IBankService bankService,
+            string localIp,
+            int port,
             int commandTimeoutMs,
             int clientIdleTimeoutMs)
         {
-            commandHandler = new CommandHandler(bankService);
+            commandHandler = new CommandHandler(bankService, localIp, port, commandTimeoutMs);
             this.commandTimeoutMs = commandTimeoutMs;
             this.clientIdleTimeoutMs = clientIdleTimeoutMs;
         }
@@ -39,7 +35,6 @@ namespace BankNodeP2P.Networking
             listener = new TcpListener(IPAddress.Any, port);
             listener.Start();
 
-            // běží na pozadí
             acceptLoopTask = Task.Run(() => AcceptLoopAsync(cts.Token));
 
             await Task.CompletedTask;
@@ -58,7 +53,7 @@ namespace BankNodeP2P.Networking
                 if (acceptLoopTask != null)
                     await acceptLoopTask;
             }
-            catch { /* ignore */ }
+            catch {}
 
             listener = null;
             cts = null;

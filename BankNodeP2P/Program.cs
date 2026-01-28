@@ -15,7 +15,9 @@ internal static class Program
         var (config, logger, _, bankService) = AppComposition.Build();
 
         var server = new BankTcpServer(
-           bankService,                
+           bankService,
+           config.BankIp,
+           config.Port,
            config.CommandTimeoutMs,
            config.ClientIdleTimeoutMs
        );

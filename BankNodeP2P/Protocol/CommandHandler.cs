@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BankNodeP2P.Networking;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -12,11 +13,20 @@ namespace BankNodeP2P.Protocol
     public class CommandHandler
     {
         private readonly IBankService bank;
+        private readonly BankProxyClient proxy;
+        private readonly string localIp;
 
-        public CommandHandler(IBankService bank)
+        public CommandHandler(
+            IBankService bank,
+            string localIp,
+            int port,
+            int timeoutMs)
         {
             this.bank = bank;
+            this.localIp = localIp;
+            proxy = new BankProxyClient(port, timeoutMs);
         }
+
         public string Execute(ParsedCommand cmd)
         {
             try
@@ -24,7 +34,7 @@ namespace BankNodeP2P.Protocol
                 switch (cmd.Code)
                 {
                     case CommandCodeEnum.BC:
-                        return $"BC {bank.GetBankIp()}";
+                        return $"BC {localIp}";
 
                     case CommandCodeEnum.AC:
                         {
@@ -33,25 +43,34 @@ namespace BankNodeP2P.Protocol
                         }
 
                     case CommandCodeEnum.AD:
-                        {
-                            var (acc, ip, amount) = RequireAccIpAmount(cmd);
-                            bank.Deposit(acc, ip, amount);
-                            return "AD";
-                        }
+                        return HandleLocalOrProxy(
+                            cmd,
+                            local: () =>
+                            {
+                                var (a, ip, amount) = RequireAccIpAmount(cmd);
+                                bank.Deposit(a, ip, amount);
+                                return "AD";
+                            });
 
                     case CommandCodeEnum.AW:
-                        {
-                            var (acc, ip, amount) = RequireAccIpAmount(cmd);
-                            bank.Withdraw(acc, ip, amount);
-                            return "AW";
-                        }
+                        return HandleLocalOrProxy(
+                            cmd,
+                            local: () =>
+                            {
+                                var (a, ip, amount) = RequireAccIpAmount(cmd);
+                                bank.Withdraw(a, ip, amount);
+                                return "AW";
+                            });
 
                     case CommandCodeEnum.AB:
-                        {
-                            var (acc, ip) = RequireAccIp(cmd);
-                            var bal = bank.GetAccountBalance(acc, ip);
-                            return $"AB {bal.ToString(CultureInfo.InvariantCulture)}";
-                        }
+                        return HandleLocalOrProxy(
+                            cmd,
+                            local: () =>
+                            {
+                                var (a, ip) = RequireAccIp(cmd);
+                                var bal = bank.GetAccountBalance(a, ip);
+                                return $"AB {bal.ToString(CultureInfo.InvariantCulture)}";
+                            });
 
                     case CommandCodeEnum.AR:
                         {
@@ -61,16 +80,10 @@ namespace BankNodeP2P.Protocol
                         }
 
                     case CommandCodeEnum.BA:
-                        {
-                            var total = bank.GetTotalBalance();
-                            return $"BA {total.ToString(CultureInfo.InvariantCulture)}";
-                        }
+                        return $"BA {bank.GetTotalBalance()}";
 
                     case CommandCodeEnum.BN:
-                        {
-                            var count = bank.GetAccountCount();
-                            return $"BN {count.ToString(CultureInfo.InvariantCulture)}";
-                        }
+                        return $"BN {bank.GetAccountCount()}";
 
                     default:
                         return "ER Unknown command";
@@ -89,6 +102,20 @@ namespace BankNodeP2P.Protocol
                 return "ER Internal error";
             }
         }
+
+
+        private string HandleLocalOrProxy(ParsedCommand cmd, Func<string> local)
+        {
+            var (_, ip) = RequireAccIp(cmd);
+
+            if (ip == localIp)
+            {
+                return local();
+            }
+
+            return proxy.ForwardAsync(ip, cmd.RawLine!).GetAwaiter().GetResult();
+        }
+
         private static (int acc, string ip) RequireAccIp(ParsedCommand cmd)
         {
             if (string.IsNullOrWhiteSpace(cmd.Account) || string.IsNullOrWhiteSpace(cmd.BankIp))
@@ -107,8 +134,7 @@ namespace BankNodeP2P.Protocol
             if (cmd.Amount is null)
                 throw new ArgumentException("Missing amount");
 
-            var amount = cmd.Amount.Value;
-            return (acc, ip, amount);
+            return (acc, ip, cmd.Amount.Value);
         }
     }
 }

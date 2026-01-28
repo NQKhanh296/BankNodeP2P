@@ -43,7 +43,7 @@ public partial class MainForm : Form
         if (_controller?.StartAsync == null)
         {
             _logger?.Warn("UI", "Start clicked, but controller not attached yet.");
-            MessageBox.Show("Server controller není připojen (zatím nenapojen Studentem A).", "Info");
+            MessageBox.Show("Server controller is not connected.", "Info");
             return;
         }
 
@@ -70,7 +70,7 @@ public partial class MainForm : Form
         if (_controller?.StopAsync == null)
         {
             _logger?.Warn("UI", "Stop clicked, but controller not attached yet.");
-            MessageBox.Show("Server controller není připojen (zatím nenapojen Studentem A).", "Info");
+            MessageBox.Show("Server controller is not connected..", "Info");
             return;
         }
 
@@ -86,7 +86,6 @@ public partial class MainForm : Form
         }
         catch (Exception ex)
         {
-            // když stop selže, radši necháme running, ale vypíšeme chybu
             SetUiRunning();
             _logger?.Error("UI", $"Stop failed: {ex.Message}");
             MessageBox.Show(ex.Message, "Stop failed");
