@@ -10,6 +10,11 @@
 
   <ItemGroup>
     <Folder Include="config\" />
+    <Folder Include="Domain\" />
+    <Folder Include="Logging\" />
+    <Folder Include="data\" />
+    <Folder Include="Persistence\" />
+    <Folder Include="UI\" />
   </ItemGroup>
 
 </Project>
