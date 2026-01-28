@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BankNodeP2P.App;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,7 +13,7 @@ namespace BankNodeP2P.UI
     /// </summary>
     public class NodeController
     {
-        public Func<Task>? StartAsync { get; init; }
+        public Func<string, int, int, int, Task>? StartAsync { get; init; }
         public Func<Task>? StopAsync { get; init; }
     }
 }

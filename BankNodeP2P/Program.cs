@@ -1,4 +1,5 @@
 using BankNodeP2P.App;
+using BankNodeP2P.Domain;
 using BankNodeP2P.Networking;
 using BankNodeP2P.UI;
 
@@ -12,26 +13,49 @@ internal static class Program
         Application.EnableVisualStyles();
         Application.SetCompatibleTextRenderingDefault(false);
 
-        var (config, logger, _, bankService) = AppComposition.Build();
+        var (logger, bankStore, state) = AppComposition.BuildCore();
 
-        var server = new BankTcpServer(
-           bankService,
-           config.BankIp,
-           config.Port,
-           config.CommandTimeoutMs,
-           config.ClientIdleTimeoutMs
-       );
+        BankService? bankService = null;
+        BankTcpServer? server = null;
 
         var form = new MainForm();
         form.SetLogger(logger);
 
         form.SetController(new NodeController
         {
-            StartAsync = () => server.StartAsync(config.Port),
-            StopAsync = () => server.StopAsync()
+            StartAsync = async (ip, port, cmdTimeoutMs, idleTimeoutMs) =>
+            {
+                if (server != null)
+                    throw new InvalidOperationException("Server already running.");
+
+                bankService ??= AppComposition.BuildBankService(state, bankStore, logger, ip);
+
+                server = new BankTcpServer(
+                    bankService,
+                    ip,
+                    port,
+                    cmdTimeoutMs,
+                    idleTimeoutMs
+                );
+
+                await server.StartAsync(port);
+
+                logger.Info("App", $"Server started. BankIp={ip} Port={port} cmdTimeout={cmdTimeoutMs}ms idleTimeout={idleTimeoutMs}ms");
+            },
+
+            StopAsync = async () =>
+            {
+                if (server == null)
+                    return;
+
+                await server.StopAsync();
+                server = null;
+
+                logger.Info("App", "Server stopped.");
+            }
         });
 
-        logger.Info("App", $"UI ready. Port={config.Port} BankIp={config.BankIp}");
+        logger.Info("App", "UI ready. Configuration is provided by UI (port/timeouts). IP is detected automatically.");
 
         Application.Run(form);
     }
