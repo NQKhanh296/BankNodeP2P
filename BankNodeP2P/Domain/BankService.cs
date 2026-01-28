@@ -78,7 +78,6 @@ public class BankService : IBankService
             throw new InvalidOperationException("Foreign bank code is not supported.");
     }
 
-    // AC
     public Account CreateAccount()
     {
         lock (_lock)
@@ -89,7 +88,7 @@ public class BankService : IBankService
                 _lastAccount++;
 
             if (_lastAccount > 99999)
-                throw new InvalidOperationException("Došel rozsah čísel účtů (10000-99999).");
+                throw new InvalidOperationException("Account number must be in range 10000–99999.");
 
             var acc = new Account { Number = _lastAccount, Balance = 0 };
             _accounts.Add(acc.Number, acc);
@@ -101,7 +100,6 @@ public class BankService : IBankService
         }
     }
 
-    // AB
     public long GetBalance(int accountNumber)
     {
         lock (_lock)
@@ -111,7 +109,6 @@ public class BankService : IBankService
         }
     }
 
-    // BA
     public long GetTotalAmount()
     {
         lock (_lock)
@@ -123,7 +120,7 @@ public class BankService : IBankService
         }
     }
 
-    // BN
+
     public int GetNumberOfClients()
     {
         lock (_lock)
@@ -132,19 +129,17 @@ public class BankService : IBankService
         }
     }
 
-    // AD
     public void Deposit(int accountNumber, long amount)
     {
         if (amount < 0)
-            throw new ArgumentOutOfRangeException(nameof(amount), "Částka musí být nezáporná.");
+            throw new ArgumentOutOfRangeException(nameof(amount), "The amount must be non-negative.");
 
         lock (_lock)
         {
             var acc = GetAccountLocked(accountNumber);
 
-            // ochrana proti přetečení long
             if (acc.Balance > long.MaxValue - amount)
-                throw new OverflowException("Přetečení zůstatku účtu.");
+                throw new OverflowException("Account balance exceeds the maximum allowed value.");
 
             acc.Balance += amount;
 
@@ -154,18 +149,17 @@ public class BankService : IBankService
         }
     }
 
-    // AW
     public void Withdraw(int accountNumber, long amount)
     {
         if (amount < 0)
-            throw new ArgumentOutOfRangeException(nameof(amount), "Částka musí být nezáporná.");
+            throw new ArgumentOutOfRangeException(nameof(amount), "The amount must be non-negative.");
 
         lock (_lock)
         {
             var acc = GetAccountLocked(accountNumber);
 
             if (acc.Balance < amount)
-                throw new InvalidOperationException("Není dostatek finančních prostředků.");
+                throw new InvalidOperationException("Insufficient funds.");
 
             acc.Balance -= amount;
 
@@ -175,7 +169,6 @@ public class BankService : IBankService
         }
     }
 
-    // AR
     public void RemoveAccount(int accountNumber)
     {
         lock (_lock)
@@ -183,7 +176,7 @@ public class BankService : IBankService
             var acc = GetAccountLocked(accountNumber);
 
             if (acc.Balance != 0)
-                throw new InvalidOperationException("Nelze smazat bankovní účet na kterém jsou finance.");
+                throw new InvalidOperationException("Cannot delete an account with a non-zero balance.");
 
             _accounts.Remove(accountNumber);
 
@@ -192,15 +185,13 @@ public class BankService : IBankService
             _logger.Info("AR", $"Removed account {accountNumber}/{_bankIp}");
         }
     }
-
-    // --- helpers ---
     private Account GetAccountLocked(int accountNumber)
     {
         if (accountNumber < 10000 || accountNumber > 99999)
-            throw new ArgumentOutOfRangeException(nameof(accountNumber), "Číslo účtu musí být v rozsahu 10000-99999.");
+            throw new ArgumentOutOfRangeException(nameof(accountNumber), "Account number must be in range 10000–99999.");
 
         if (!_accounts.TryGetValue(accountNumber, out var acc))
-            throw new KeyNotFoundException("Účet neexistuje.");
+            throw new KeyNotFoundException("The account does not exist.");
 
         return acc;
     }

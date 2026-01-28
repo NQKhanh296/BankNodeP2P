@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace BankNodeP2P.Domain
 {
+
     public class Account
     {
         public int Number { get; init; }
