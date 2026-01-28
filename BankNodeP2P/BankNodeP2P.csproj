@@ -9,7 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="App\NováSložka\" />
     <Folder Include="config\" />
     <Folder Include="data\" />
   </ItemGroup>

@@ -11,13 +11,15 @@ internal static class Program
         Application.EnableVisualStyles();
         Application.SetCompatibleTextRenderingDefault(false);
 
-        // zatím natvrdo (pozdìji config nebo automatické zjištìní)
         var bankIp = "127.0.0.1";
 
         var (logger, _, _) = AppComposition.Build(bankIp);
 
         var form = new MainForm();
         form.SetLogger(logger);
+
+        // zatím “prázdný” controller, Student A pozdìji doplní start/stop serveru
+        form.SetController(new NodeController());
 
         logger.Info("App", "Application started");
 
