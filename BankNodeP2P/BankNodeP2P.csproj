@@ -13,7 +13,6 @@
     <Folder Include="Domain\" />
     <Folder Include="data\" />
     <Folder Include="Persistence\" />
-    <Folder Include="UI\" />
   </ItemGroup>
 
 </Project>
