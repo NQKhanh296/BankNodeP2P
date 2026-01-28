@@ -1,9 +1,10 @@
 ﻿using BankNodeP2P.Logging;
 using BankNodeP2P.Persistence;
+using BankNodeP2P.Protocol;
 
 namespace BankNodeP2P.Domain;
 
-public class BankService
+public class BankService : IBankService
 {
     private readonly Dictionary<int, Account> _accounts;
     private readonly BankStore _store;
@@ -30,6 +31,51 @@ public class BankService
                 a => a.Number,
                 a => new Account { Number = a.Number, Balance = a.Balance }
             );
+    }
+
+    public string GetBankIp() => _bankIp;
+
+    public long GetTotalBalance() => GetTotalAmount();
+
+    public int GetAccountCount() => GetNumberOfClients();
+
+    (int accountNumber, string bankIp) IBankService.CreateAccount()
+    {
+        var acc = CreateAccount();
+        return (acc.Number, _bankIp);
+    }
+
+    public void Deposit(int accountNumber, string bankIp, long amount)
+    {
+        RequireLocalBank(bankIp);
+        Deposit(accountNumber, amount);
+    }
+
+    public void Withdraw(int accountNumber, string bankIp, long amount)
+    {
+        RequireLocalBank(bankIp);
+        Withdraw(accountNumber, amount);
+    }
+
+    public long GetAccountBalance(int accountNumber, string bankIp)
+    {
+        RequireLocalBank(bankIp);
+        return GetBalance(accountNumber);
+    }
+
+    public void RemoveAccount(int accountNumber, string bankIp)
+    {
+        RequireLocalBank(bankIp);
+        RemoveAccount(accountNumber);
+    }
+
+    private void RequireLocalBank(string bankIp)
+    {
+        if (string.IsNullOrWhiteSpace(bankIp))
+            throw new ArgumentException("Invalid bank IP.");
+
+        if (!string.Equals(bankIp, _bankIp, StringComparison.Ordinal))
+            throw new InvalidOperationException("Foreign bank code is not supported.");
     }
 
     // AC

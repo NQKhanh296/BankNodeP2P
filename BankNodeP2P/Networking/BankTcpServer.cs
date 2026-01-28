@@ -13,32 +13,55 @@ namespace BankNodeP2P.Networking
     public class BankTcpServer
     {
         private TcpListener? listener;
-        private CancellationTokenSource? cancellationTokenSource;
+        private CancellationTokenSource? cts;
+        private Task? acceptLoopTask;
 
         private readonly CommandHandler commandHandler;
         private readonly int commandTimeoutMs;
         private readonly int clientIdleTimeoutMs;
 
-        public BankTcpServer(IBankService bankService, int commandTimeoutMs, int clientIdleTimeoutMs)
+        public BankTcpServer(
+            IBankService bankService,
+            int commandTimeoutMs,
+            int clientIdleTimeoutMs)
         {
             commandHandler = new CommandHandler(bankService);
             this.commandTimeoutMs = commandTimeoutMs;
             this.clientIdleTimeoutMs = clientIdleTimeoutMs;
         }
 
-        public void Start(int port)
+        public async Task StartAsync(int port)
         {
-            cancellationTokenSource = new CancellationTokenSource();
+            if (listener != null)
+                throw new InvalidOperationException("Server already running.");
+
+            cts = new CancellationTokenSource();
             listener = new TcpListener(IPAddress.Any, port);
             listener.Start();
 
-            Task.Run(() => AcceptLoopAsync(cancellationTokenSource.Token));
+            // běží na pozadí
+            acceptLoopTask = Task.Run(() => AcceptLoopAsync(cts.Token));
+
+            await Task.CompletedTask;
         }
 
-        public void Stop()
+        public async Task StopAsync()
         {
-            cancellationTokenSource?.Cancel();
-            listener?.Stop();
+            if (listener == null)
+                return;
+
+            cts!.Cancel();
+            listener.Stop();
+
+            try
+            {
+                if (acceptLoopTask != null)
+                    await acceptLoopTask;
+            }
+            catch { /* ignore */ }
+
+            listener = null;
+            cts = null;
         }
 
         private async Task AcceptLoopAsync(CancellationToken token)
@@ -56,7 +79,12 @@ namespace BankNodeP2P.Networking
                     break;
                 }
 
-                var handler = new ClientHandler(commandHandler, commandTimeoutMs, clientIdleTimeoutMs);
+                var handler = new ClientHandler(
+                    commandHandler,
+                    commandTimeoutMs,
+                    clientIdleTimeoutMs
+                );
+
                 _ = Task.Run(() => handler.RunAsync(client, token), token);
             }
         }

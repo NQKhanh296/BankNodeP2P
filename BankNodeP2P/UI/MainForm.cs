@@ -1,4 +1,6 @@
-﻿using BankNodeP2P.Logging;
+﻿using BankNodeP2P.App;
+using BankNodeP2P.Logging;
+using BankNodeP2P.Networking;
 
 namespace BankNodeP2P.UI;
 
@@ -11,6 +13,9 @@ public partial class MainForm : Form
     private Button btnStop;
     private Label lblStatus;
     private TextBox txtLog;
+
+    private BankTcpServer? _server;
+    private AppConfig? _config;
 
     public MainForm()
     {
@@ -135,35 +140,59 @@ public partial class MainForm : Form
         btnStop = new Button();
         lblStatus = new Label();
         txtLog = new TextBox();
-
         SuspendLayout();
-
+        // 
+        // btnStart
+        // 
         btnStart.Location = new Point(20, 20);
+        btnStart.Name = "btnStart";
         btnStart.Size = new Size(80, 30);
+        btnStart.TabIndex = 0;
         btnStart.Text = "Start";
-
+        btnStart.Click += btnStart_Click_1;
+        // 
+        // btnStop
+        // 
         btnStop.Location = new Point(120, 20);
+        btnStop.Name = "btnStop";
         btnStop.Size = new Size(80, 30);
+        btnStop.TabIndex = 1;
         btnStop.Text = "Stop";
-
+        // 
+        // lblStatus
+        // 
         lblStatus.Location = new Point(220, 26);
+        lblStatus.Name = "lblStatus";
         lblStatus.Size = new Size(200, 20);
+        lblStatus.TabIndex = 2;
         lblStatus.Text = "Stopped";
-
+        // 
+        // txtLog
+        // 
         txtLog.Dock = DockStyle.Bottom;
+        txtLog.Location = new Point(0, 100);
         txtLog.Multiline = true;
+        txtLog.Name = "txtLog";
         txtLog.ReadOnly = true;
         txtLog.ScrollBars = ScrollBars.Vertical;
-        txtLog.Height = 250;
-
+        txtLog.Size = new Size(650, 250);
+        txtLog.TabIndex = 3;
+        // 
+        // MainForm
+        // 
         ClientSize = new Size(650, 350);
         Controls.Add(btnStart);
         Controls.Add(btnStop);
         Controls.Add(lblStatus);
         Controls.Add(txtLog);
-
+        Name = "MainForm";
         Text = "BankNode P2P";
-
         ResumeLayout(false);
+        PerformLayout();
+    }
+
+    private void btnStart_Click_1(object sender, EventArgs e)
+    {
+
     }
 }

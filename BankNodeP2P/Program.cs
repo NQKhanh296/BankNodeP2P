@@ -1,4 +1,5 @@
 using BankNodeP2P.App;
+using BankNodeP2P.Networking;
 using BankNodeP2P.UI;
 
 namespace BankNodeP2P;
@@ -11,15 +12,24 @@ internal static class Program
         Application.EnableVisualStyles();
         Application.SetCompatibleTextRenderingDefault(false);
 
-        var (config, logger, _, _) = AppComposition.Build();
+        var (config, logger, _, bankService) = AppComposition.Build();
+
+        var server = new BankTcpServer(
+           bankService,                
+           config.CommandTimeoutMs,
+           config.ClientIdleTimeoutMs
+       );
 
         var form = new MainForm();
         form.SetLogger(logger);
 
-        // zatím prázdný controller, Student A napojí server start/stop
-        form.SetController(new NodeController());
+        form.SetController(new NodeController
+        {
+            StartAsync = () => server.StartAsync(config.Port),
+            StopAsync = () => server.StopAsync()
+        });
 
-        logger.Info("App", "Application started");
+        logger.Info("App", $"UI ready. Port={config.Port} BankIp={config.BankIp}");
 
         Application.Run(form);
     }
