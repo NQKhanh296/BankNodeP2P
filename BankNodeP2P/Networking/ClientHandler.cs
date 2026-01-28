@@ -11,10 +11,14 @@ namespace BankNodeP2P.Networking
     public class ClientHandler
     {
         private readonly CommandHandler handler;
+        private readonly TimeSpan commandTimeout;
+        private readonly TimeSpan clientIdleTimeout;
 
-        public ClientHandler(CommandHandler handler)
+        public ClientHandler(CommandHandler handler, int commandTimeoutMs, int clientIdleTimeoutMs)
         {
             this.handler = handler;
+            commandTimeout = TimeSpan.FromMilliseconds(commandTimeoutMs);
+            clientIdleTimeout = TimeSpan.FromMilliseconds(clientIdleTimeoutMs);
         }
 
         public async Task RunAsync(TcpClient client, CancellationToken token)
@@ -32,7 +36,17 @@ namespace BankNodeP2P.Networking
 
                 try
                 {
-                    line = await reader.ReadLineAsync();
+                    var readTask = reader.ReadLineAsync();
+                    line = await readTask.WaitAsync(clientIdleTimeout, token);
+                }
+                catch (TimeoutException)
+                {
+                    try { await writer.WriteLineAsync("ER Client idle timeout"); } catch { }
+                    break;
+                }
+                catch (OperationCanceledException)
+                {
+                    break;
                 }
                 catch
                 {
@@ -43,18 +57,34 @@ namespace BankNodeP2P.Networking
                     break;
 
                 var parse = CommandParser.Parse(line);
-
                 if (!parse.Ok)
                 {
                     await writer.WriteLineAsync($"ER {parse.Error}");
                     continue;
                 }
 
-                var response = handler.Execute(parse.Command!);
-                await writer.WriteLineAsync(response);
+                try
+                {
+                    var responseTask = Task.Run(() => handler.Execute(parse.Command!), token);
+                    var response = await responseTask.WaitAsync(commandTimeout, token);
+
+                    await writer.WriteLineAsync(response);
+                }
+                catch (TimeoutException)
+                {
+                    await writer.WriteLineAsync("ER Timeout");
+                }
+                catch (OperationCanceledException)
+                {
+                    break;
+                }
+                catch
+                {
+                    await writer.WriteLineAsync("ER Internal error");
+                }
             }
 
-            client.Close();
+            try { client.Close(); } catch { }
         }
     }
 }
