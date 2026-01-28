@@ -7,7 +7,6 @@ public class AppConfig
     public string BankIp { get; set; } = "127.0.0.1";
     public int Port { get; set; } = 65530;
 
-    // timeouty v milisekundách
     public int CommandTimeoutMs { get; set; } = 5000;
     public int ClientIdleTimeoutMs { get; set; } = 15000;
 
@@ -30,7 +29,6 @@ public class AppConfig
         }
         catch
         {
-            // když je config rozbitý, uděláme bezpečný fallback
             return new AppConfig();
         }
     }
