@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace BankNodeP2P.Protocol
 {
+    /// <summary>
+    /// Represents the result of parsing a protocol command.
+    /// Contains either a successfully parsed command or an error message.
+    /// </summary>
     public class ParseResult
     {
         public bool Ok { get; }

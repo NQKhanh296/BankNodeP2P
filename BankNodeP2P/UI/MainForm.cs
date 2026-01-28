@@ -14,9 +14,6 @@ public partial class MainForm : Form
     private Label lblStatus;
     private TextBox txtLog;
 
-    private BankTcpServer? _server;
-    private AppConfig? _config;
-
     public MainForm()
     {
         InitializeComponent();

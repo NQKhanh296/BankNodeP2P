@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace BankNodeP2P.Protocol
 {
+    /// <summary>
+    /// Represents a successfully parsed protocol command.
+    /// Stores the command code, raw input line and parsed parameters.
+    /// </summary>
     public class ParsedCommand
     {
         public CommandCodeEnum Code { get; }

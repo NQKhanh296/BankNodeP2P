@@ -9,13 +9,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="bin\**" />
     <Compile Remove="config\**" />
+    <EmbeddedResource Remove="bin\**" />
     <EmbeddedResource Remove="config\**" />
+    <None Remove="bin\**" />
     <None Remove="config\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="data\" />
   </ItemGroup>
 
 </Project>

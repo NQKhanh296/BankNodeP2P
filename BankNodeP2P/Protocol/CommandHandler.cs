@@ -10,12 +10,24 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
 
 namespace BankNodeP2P.Protocol
 {
+    /// <summary>
+    /// Executes parsed bank protocol commands.
+    /// Decides whether a command should be handled locally
+    /// or forwarded to another bank node via proxy.
+    /// </summary>
     public class CommandHandler
     {
         private readonly IBankService bank;
         private readonly BankProxyClient proxy;
         private readonly string localIp;
 
+        /// <summary>
+        /// Initializes the command handler.
+        /// </summary>
+        /// <param name="bank">Local bank service.</param>
+        /// <param name="localIp">IP address of this bank node.</param>
+        /// <param name="port">TCP port used for proxy communication.</param>
+        /// <param name="timeoutMs">Timeout for proxy operations.</param>
         public CommandHandler(
             IBankService bank,
             string localIp,
@@ -27,6 +39,11 @@ namespace BankNodeP2P.Protocol
             proxy = new BankProxyClient(port, timeoutMs);
         }
 
+        /// <summary>
+        /// Executes a parsed protocol command and returns a textual response.
+        /// </summary>
+        /// <param name="cmd">Parsed command to execute.</param>
+        /// <returns>Protocol response string.</returns>
         public string Execute(ParsedCommand cmd)
         {
             try
@@ -103,7 +120,13 @@ namespace BankNodeP2P.Protocol
             }
         }
 
-
+        /// <summary>
+        /// Executes a command locally if it targets this bank,
+        /// otherwise forwards it to the appropriate remote bank node.
+        /// </summary>
+        /// <param name="cmd">Parsed command.</param>
+        /// <param name="local">Local execution logic.</param>
+        /// <returns>Protocol response.</returns>
         private string HandleLocalOrProxy(ParsedCommand cmd, Func<string> local)
         {
             var (_, ip) = RequireAccIp(cmd);
@@ -116,6 +139,11 @@ namespace BankNodeP2P.Protocol
             return proxy.ForwardAsync(ip, cmd.RawLine!).GetAwaiter().GetResult();
         }
 
+        /// <summary>
+        /// Validates and extracts account number and bank IP from a command.
+        /// </summary>
+        /// <param name="cmd">Parsed command.</param>
+        /// <returns>Account number and bank IP.</returns>
         private static (int acc, string ip) RequireAccIp(ParsedCommand cmd)
         {
             if (string.IsNullOrWhiteSpace(cmd.Account) || string.IsNullOrWhiteSpace(cmd.BankIp))
@@ -127,6 +155,11 @@ namespace BankNodeP2P.Protocol
             return (acc, cmd.BankIp!);
         }
 
+        /// <summary>
+        /// Validates and extracts account number, bank IP and amount from a command.
+        /// </summary>
+        /// <param name="cmd">Parsed command.</param>
+        /// <returns>Account number, bank IP and amount.</returns>
         private static (int acc, string ip, long amount) RequireAccIpAmount(ParsedCommand cmd)
         {
             var (acc, ip) = RequireAccIp(cmd);

@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 
 namespace BankNodeP2P.Protocol
 {
+    /// <summary>
+    /// Defines banking operations provided by a bank node.
+    /// This abstraction is used by the protocol layer to execute commands
+    /// without depending on a specific domain implementation.
+    /// </summary>
     public interface IBankService
     {
         string GetBankIp();                 

@@ -4,6 +4,11 @@ using System.Net.Sockets;
 
 namespace BankNodeP2P.Networking
 {
+    /// <summary>
+    /// TCP server of the bank node.
+    /// Listens for incoming client connections and delegates
+    /// command processing to client handlers.
+    /// </summary>
     public class BankTcpServer
     {
         private TcpListener? listener;
@@ -14,6 +19,14 @@ namespace BankNodeP2P.Networking
         private readonly int commandTimeoutMs;
         private readonly int clientIdleTimeoutMs;
 
+        /// <summary>
+        /// Initializes the TCP server and its command handler.
+        /// </summary>
+        /// <param name="bankService">Bank service providing banking operations.</param>
+        /// <param name="localIp">IP address of this bank node.</param>
+        /// <param name="port">TCP port on which the server will listen.</param>
+        /// <param name="commandTimeoutMs">Timeout for command execution.</param>
+        /// <param name="clientIdleTimeoutMs">Timeout for idle client connections.</param>
         public BankTcpServer(
             IBankService bankService,
             string localIp,
@@ -26,6 +39,10 @@ namespace BankNodeP2P.Networking
             this.clientIdleTimeoutMs = clientIdleTimeoutMs;
         }
 
+        /// <summary>
+        /// Starts the TCP server and begins accepting client connections.
+        /// </summary>
+        /// <param name="port">TCP port to listen on.</param>
         public async Task StartAsync(int port)
         {
             if (listener != null)
@@ -40,6 +57,9 @@ namespace BankNodeP2P.Networking
             await Task.CompletedTask;
         }
 
+        /// <summary>
+        /// Stops the TCP server and waits for background tasks to finish.
+        /// </summary>
         public async Task StopAsync()
         {
             if (listener == null)
@@ -59,6 +79,11 @@ namespace BankNodeP2P.Networking
             cts = null;
         }
 
+        /// <summary>
+        /// Accept loop that continuously listens for incoming TCP clients
+        /// and starts a client handler for each connection.
+        /// </summary>
+        /// <param name="token">Cancellation token used to stop the loop.</param>
         private async Task AcceptLoopAsync(CancellationToken token)
         {
             while (!token.IsCancellationRequested)

@@ -7,8 +7,20 @@ using System.Threading.Tasks;
 
 namespace BankNodeP2P.Protocol
 {
+    /// <summary>
+    /// Parses raw text protocol lines into a structured command representation.
+    /// Validates command syntax and parameters according to the bank protocol.
+    /// </summary>
     public static class CommandParser
     {
+        /// <summary>
+        /// Parses a single input line into a <see cref="ParseResult"/>.
+        /// On success, returns a parsed <see cref="ParsedCommand"/>; otherwise returns an error message.
+        /// </summary>
+        /// <param name="line">Raw input line received from a client.</param>
+        /// <returns>
+        /// A parse result containing either a valid parsed command or an error description.
+        /// </returns>
         public static ParseResult Parse(string? line)
         {
             if (string.IsNullOrWhiteSpace(line))

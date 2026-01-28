@@ -4,12 +4,23 @@ using System.Text;
 
 namespace BankNodeP2P.Networking
 {
+    /// <summary>
+    /// Handles communication with a single connected TCP client.
+    /// Reads protocol commands, processes them using a command handler
+    /// and sends responses back to the client.
+    /// </summary>
     public class ClientHandler
     {
         private readonly CommandHandler handler;
         private readonly TimeSpan commandTimeout;
         private readonly TimeSpan clientIdleTimeout;
 
+        /// <summary>
+        /// Initializes the client handler with command and idle timeouts.
+        /// </summary>
+        /// <param name="handler">Command handler used to execute commands.</param>
+        /// <param name="commandTimeoutMs">Command execution timeout in milliseconds.</param>
+        /// <param name="clientIdleTimeoutMs">Idle client timeout in milliseconds.</param>
         public ClientHandler(CommandHandler handler, int commandTimeoutMs, int clientIdleTimeoutMs)
         {
             this.handler = handler;
@@ -17,6 +28,13 @@ namespace BankNodeP2P.Networking
             clientIdleTimeout = TimeSpan.FromMilliseconds(clientIdleTimeoutMs);
         }
 
+        /// <summary>
+        /// Runs the client communication loop.
+        /// Continuously reads commands from the client until
+        /// the connection is closed, a timeout occurs, or cancellation is requested.
+        /// </summary>
+        /// <param name="client">Connected TCP client.</param>
+        /// <param name="token">Cancellation token used to stop the handler.</param>
         public async Task RunAsync(TcpClient client, CancellationToken token)
         {
             using var stream = client.GetStream();
