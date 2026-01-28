@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36717.8 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankNodeP2P", "BankNodeP2P\BankNodeP2P.csproj", "{C416F781-08EC-476F-B4E1-3DA1653EC034}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C416F781-08EC-476F-B4E1-3DA1653EC034}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C416F781-08EC-476F-B4E1-3DA1653EC034}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C416F781-08EC-476F-B4E1-3DA1653EC034}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C416F781-08EC-476F-B4E1-3DA1653EC034}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7D07FBAC-E86D-4DF2-B4B8-DE583A3D8D8A}
+	EndGlobalSection
+EndGlobal
