@@ -24,7 +24,6 @@ public static class AppComposition
         var bankStore = new BankStore(bankStatePath);
         var state = bankStore.Load();
 
-        // pokud je v uloženém stavu prázdný bankIp, doplníme z configu
         if (string.IsNullOrWhiteSpace(state.BankIp))
             state.BankIp = config.BankIp;
 
