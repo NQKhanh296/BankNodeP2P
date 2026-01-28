@@ -1,17 +1,26 @@
-namespace BankNodeP2P
+using BankNodeP2P.App;
+using BankNodeP2P.UI;
+
+namespace BankNodeP2P;
+
+internal static class Program
 {
-    internal static class Program
+    [STAThread]
+    static void Main()
     {
-        /// <summary>
-        ///  The main entry point for the application.
-        /// </summary>
-        [STAThread]
-        static void Main()
-        {
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
-            ApplicationConfiguration.Initialize();
-            Application.Run(new Form1());
-        }
+        Application.EnableVisualStyles();
+        Application.SetCompatibleTextRenderingDefault(false);
+
+        var (config, logger, _, _) = AppComposition.Build();
+
+        var form = new MainForm();
+        form.SetLogger(logger);
+
+        // zatím prázdný controller, Student A napojí server start/stop
+        form.SetController(new NodeController());
+
+        logger.Info("App", "Application started");
+
+        Application.Run(form);
     }
 }
