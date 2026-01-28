@@ -1,105 +1,99 @@
 ﻿using BankNodeP2P.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace BankNodeP2P.UI
+namespace BankNodeP2P.UI;
+
+public partial class MainForm : Form
 {
-    public partial class MainForm : Form
+    private Logger? _logger;
+
+    private Button btnStart;
+    private Button btnStop;
+    private Label lblStatus;
+    private TextBox txtLog;
+
+    public MainForm()
     {
-        private Logger? _logger;
+        InitializeComponent();
 
-        public MainForm()
+        lblStatus.Text = "Stopped";
+        btnStop.Enabled = false;
+
+        btnStart.Click += BtnStart_Click;
+        btnStop.Click += BtnStop_Click;
+    }
+
+    public void SetLogger(Logger logger)
+    {
+        _logger = logger;
+        _logger.OnLog += OnLog;
+    }
+
+    private void BtnStart_Click(object? sender, EventArgs e)
+    {
+        lblStatus.Text = "Running";
+        btnStart.Enabled = false;
+        btnStop.Enabled = true;
+
+        _logger?.Info("UI", "Start clicked");
+    }
+
+    private void BtnStop_Click(object? sender, EventArgs e)
+    {
+        lblStatus.Text = "Stopped";
+        btnStart.Enabled = true;
+        btnStop.Enabled = false;
+
+        _logger?.Info("UI", "Stop clicked");
+    }
+
+    private void OnLog(LogEntry entry)
+    {
+        if (InvokeRequired)
         {
-            InitializeComponent();
-            lblStatus.Text = "Stopped";
+            BeginInvoke(() => OnLog(entry));
+            return;
         }
 
-        public void SetLogger(Logger logger)
-        {
-            _logger = logger;
-            _logger.OnLog += OnLog;
-        }
+        txtLog.AppendText(
+            $"[{entry.Timestamp:HH:mm:ss}] {entry.Level} {entry.Event} {entry.Message}\r\n"
+        );
+    }
 
-        private void InitializeComponent()
-        {
-            btnStart = new Button();
-            btnStop = new Button();
-            lblStatus = new Label();
-            txtLog = new TextBox();
-            SuspendLayout();
-            // 
-            // btnStart
-            // 
-            btnStart.Location = new Point(65, 53);
-            btnStart.Name = "btnStart";
-            btnStart.Size = new Size(75, 23);
-            btnStart.TabIndex = 0;
-            btnStart.Text = "Start";
-            btnStart.UseVisualStyleBackColor = true;
-            btnStart.Click += button1_Click;
-            // 
-            // btnStop
-            // 
-            btnStop.Location = new Point(159, 53);
-            btnStop.Name = "btnStop";
-            btnStop.Size = new Size(75, 23);
-            btnStop.TabIndex = 1;
-            btnStop.Text = "Stop";
-            btnStop.UseVisualStyleBackColor = true;
-            // 
-            // lblStatus
-            // 
-            lblStatus.AutoSize = true;
-            lblStatus.Location = new Point(80, 97);
-            lblStatus.Name = "lblStatus";
-            lblStatus.Size = new Size(51, 15);
-            lblStatus.TabIndex = 2;
-            lblStatus.Text = "Stopped";
-            // 
-            // txtLog
-            // 
-            txtLog.Dock = DockStyle.Bottom;
-            txtLog.Location = new Point(0, 126);
-            txtLog.Multiline = true;
-            txtLog.Name = "txtLog";
-            txtLog.ReadOnly = true;
-            txtLog.ScrollBars = ScrollBars.Vertical;
-            txtLog.Size = new Size(432, 230);
-            txtLog.TabIndex = 3;
-            // 
-            // MainForm
-            // 
-            ClientSize = new Size(432, 356);
-            Controls.Add(txtLog);
-            Controls.Add(lblStatus);
-            Controls.Add(btnStop);
-            Controls.Add(btnStart);
-            Name = "MainForm";
-            ResumeLayout(false);
-            PerformLayout();
-        }
+    private void InitializeComponent()
+    {
+        btnStart = new Button();
+        btnStop = new Button();
+        lblStatus = new Label();
+        txtLog = new TextBox();
 
-        private void OnLog(LogEntry entry)
-        {
-            UiThread.Post(this, () =>
-            {
-                txtLog.AppendText(
-                    $"[{entry.Timestamp:HH:mm:ss}] {entry.Level} {entry.Event} {entry.Message}\r\n"
-                );
-            });
-        }
+        SuspendLayout();
 
-        private void button1_Click(object sender, EventArgs e)
-        {
+        btnStart.Location = new Point(20, 20);
+        btnStart.Size = new Size(80, 30);
+        btnStart.Text = "Start";
 
-        }
+        btnStop.Location = new Point(120, 20);
+        btnStop.Size = new Size(80, 30);
+        btnStop.Text = "Stop";
 
-        private Button btnStart;
-        private Button btnStop;
-        private Label lblStatus;
-        private TextBox txtLog;
+        lblStatus.Location = new Point(220, 26);
+        lblStatus.Size = new Size(200, 20);
+        lblStatus.Text = "Stopped";
+
+        txtLog.Dock = DockStyle.Bottom;
+        txtLog.Multiline = true;
+        txtLog.ReadOnly = true;
+        txtLog.ScrollBars = ScrollBars.Vertical;
+        txtLog.Height = 250;
+
+        ClientSize = new Size(500, 350);
+        Controls.Add(btnStart);
+        Controls.Add(btnStop);
+        Controls.Add(lblStatus);
+        Controls.Add(txtLog);
+
+        Text = "BankNode P2P";
+
+        ResumeLayout(false);
     }
 }

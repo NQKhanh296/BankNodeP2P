@@ -1,30 +1,30 @@
 using BankNodeP2P.Logging;
 using BankNodeP2P.UI;
 
-namespace BankNodeP2P
+namespace BankNodeP2P;
+
+internal static class Program
 {
-    internal static class Program
+    [STAThread]
+    static void Main()
     {
-        /// <summary>
-        ///  The main entry point for the application.
-        /// </summary>
-        [STAThread]
-        static void Main()
-        {
-           
-            
+        Application.EnableVisualStyles();
+        Application.SetCompatibleTextRenderingDefault(false);
 
+        var baseDir = AppContext.BaseDirectory;
+        var dataDir = Path.Combine(baseDir, "data");
+        Directory.CreateDirectory(dataDir);
 
-            var store = new LogStoreJsonl("data/logs.jsonl");
-            var logger = new Logger(store);
+        var logPath = Path.Combine(dataDir, "logs.jsonl");
 
-            var form = new MainForm();
-            form.SetLogger(logger);
+        var store = new LogStoreJsonl(logPath);
+        var logger = new Logger(store);
 
-            logger.Info("App", "Application started");
+        var form = new MainForm();
+        form.SetLogger(logger);
 
-            Application.Run(form);
+        logger.Info("App", $"Application started. LogPath={logPath}");
 
-        }
+        Application.Run(form);
     }
 }
