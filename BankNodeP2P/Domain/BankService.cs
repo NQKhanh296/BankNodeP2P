@@ -86,7 +86,68 @@ public class BankService
         }
     }
 
-    // --- helpersss---
+    // AD
+    public void Deposit(int accountNumber, long amount)
+    {
+        if (amount < 0)
+            throw new ArgumentOutOfRangeException(nameof(amount), "Částka musí být nezáporná.");
+
+        lock (_lock)
+        {
+            var acc = GetAccountLocked(accountNumber);
+
+            // ochrana proti přetečení long
+            if (acc.Balance > long.MaxValue - amount)
+                throw new OverflowException("Přetečení zůstatku účtu.");
+
+            acc.Balance += amount;
+
+            SaveLocked();
+
+            _logger.Info("AD", $"Deposit {amount} to {accountNumber}/{_bankIp}. NewBalance={acc.Balance}");
+        }
+    }
+
+    // AW
+    public void Withdraw(int accountNumber, long amount)
+    {
+        if (amount < 0)
+            throw new ArgumentOutOfRangeException(nameof(amount), "Částka musí být nezáporná.");
+
+        lock (_lock)
+        {
+            var acc = GetAccountLocked(accountNumber);
+
+            if (acc.Balance < amount)
+                throw new InvalidOperationException("Není dostatek finančních prostředků.");
+
+            acc.Balance -= amount;
+
+            SaveLocked();
+
+            _logger.Info("AW", $"Withdraw {amount} from {accountNumber}/{_bankIp}. NewBalance={acc.Balance}");
+        }
+    }
+
+    // AR
+    public void RemoveAccount(int accountNumber)
+    {
+        lock (_lock)
+        {
+            var acc = GetAccountLocked(accountNumber);
+
+            if (acc.Balance != 0)
+                throw new InvalidOperationException("Nelze smazat bankovní účet na kterém jsou finance.");
+
+            _accounts.Remove(accountNumber);
+
+            SaveLocked();
+
+            _logger.Info("AR", $"Removed account {accountNumber}/{_bankIp}");
+        }
+    }
+
+    // --- helpers ---
     private Account GetAccountLocked(int accountNumber)
     {
         if (accountNumber < 10000 || accountNumber > 99999)
