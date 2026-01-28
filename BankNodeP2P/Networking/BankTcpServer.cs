@@ -16,11 +16,16 @@ namespace BankNodeP2P.Networking
         private CancellationTokenSource? cancellationTokenSource;
 
         private readonly CommandHandler commandHandler;
+        private readonly int commandTimeoutMs;
+        private readonly int clientIdleTimeoutMs;
 
-        public BankTcpServer(IBankService bankService)
+        public BankTcpServer(IBankService bankService, int commandTimeoutMs, int clientIdleTimeoutMs)
         {
             commandHandler = new CommandHandler(bankService);
+            this.commandTimeoutMs = commandTimeoutMs;
+            this.clientIdleTimeoutMs = clientIdleTimeoutMs;
         }
+
         public void Start(int port)
         {
             cancellationTokenSource = new CancellationTokenSource();
@@ -51,7 +56,7 @@ namespace BankNodeP2P.Networking
                     break;
                 }
 
-                var handler = new ClientHandler(commandHandler);
+                var handler = new ClientHandler(commandHandler, commandTimeoutMs, clientIdleTimeoutMs);
                 _ = Task.Run(() => handler.RunAsync(client, token), token);
             }
         }
