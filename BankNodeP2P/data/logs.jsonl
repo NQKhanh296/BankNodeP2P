@@ -1,0 +1,27 @@
+{"Timestamp":"2026-01-28T14:09:37.601228+01:00","Level":"INFO","Event":"App","ClientIp":"","Command":"","Response":"","Message":"Application started"}
+{"Timestamp":"2026-01-28T14:10:32.9276489+01:00","Level":"INFO","Event":"App","ClientIp":"","Command":"","Response":"","Message":"Application started"}
+{"Timestamp":"2026-01-28T14:12:08.5564288+01:00","Level":"INFO","Event":"App","ClientIp":"","Command":"","Response":"","Message":"Application started"}
+{"Timestamp":"2026-01-28T14:24:56.2813124+01:00","Level":"INFO","Event":"App","ClientIp":"","Command":"","Response":"","Message":"Application started"}
+{"Timestamp":"2026-01-28T14:28:51.1932307+01:00","Level":"INFO","Event":"App","ClientIp":"","Command":"","Response":"","Message":"Application started. LogPath=C:\\Users\\Admin\\Source\\Repos\\BankNodeP2P\\BankNodeP2P\\bin\\Debug\\net8.0-windows\\data\\logs.jsonl"}
+{"Timestamp":"2026-01-28T14:40:41.7883508+01:00","Level":"INFO","Event":"App","ClientIp":"","Command":"","Response":"","Message":"Application started. LogPath=C:\\Users\\Admin\\Source\\Repos\\BankNodeP2P\\BankNodeP2P\\bin\\Debug\\net8.0-windows\\data\\logs.jsonl"}
+{"Timestamp":"2026-01-28T14:40:44.9378657+01:00","Level":"INFO","Event":"UI","ClientIp":"","Command":"","Response":"","Message":"Start clicked"}
+{"Timestamp":"2026-01-28T14:40:59.4436382+01:00","Level":"INFO","Event":"UI","ClientIp":"","Command":"","Response":"","Message":"Stop clicked"}
+{"Timestamp":"2026-01-28T14:41:01.2587808+01:00","Level":"INFO","Event":"UI","ClientIp":"","Command":"","Response":"","Message":"Start clicked"}
+{"Timestamp":"2026-01-28T14:41:12.5616894+01:00","Level":"INFO","Event":"UI","ClientIp":"","Command":"","Response":"","Message":"Stop clicked"}
+{"Timestamp":"2026-01-28T14:42:59.7186353+01:00","Level":"INFO","Event":"App","ClientIp":"","Command":"","Response":"","Message":"Application started. LogPath=C:\\Users\\Admin\\Source\\Repos\\BankNodeP2P\\BankNodeP2P\\bin\\Debug\\net8.0-windows\\data\\logs.jsonl"}
+{"Timestamp":"2026-01-28T14:43:02.2694769+01:00","Level":"INFO","Event":"UI","ClientIp":"","Command":"","Response":"","Message":"Start clicked"}
+{"Timestamp":"2026-01-28T14:43:03.2548993+01:00","Level":"INFO","Event":"UI","ClientIp":"","Command":"","Response":"","Message":"Stop clicked"}
+{"Timestamp":"2026-01-28T14:52:06.4905616+01:00","Level":"INFO","Event":"App","ClientIp":"","Command":"","Response":"","Message":"Application started. LogPath=C:\\Users\\Admin\\Source\\Repos\\BankNodeP2P\\BankNodeP2P\\bin\\Debug\\net8.0-windows\\data\\logs.jsonl"}
+{"Timestamp":"2026-01-28T14:52:12.5032881+01:00","Level":"INFO","Event":"UI","ClientIp":"","Command":"","Response":"","Message":"Start clicked"}
+{"Timestamp":"2026-01-28T14:52:20.9639237+01:00","Level":"INFO","Event":"UI","ClientIp":"","Command":"","Response":"","Message":"Stop clicked"}
+{"Timestamp":"2026-01-28T15:09:41.7688074+01:00","Level":"INFO","Event":"App","ClientIp":"","Command":"","Response":"","Message":"Composition built. BankIp=127.0.0.1 Port=65530"}
+{"Timestamp":"2026-01-28T15:09:41.8625201+01:00","Level":"INFO","Event":"App","ClientIp":"","Command":"","Response":"","Message":"Timeouts: cmd=5000ms idle=15000ms"}
+{"Timestamp":"2026-01-28T15:09:41.8658375+01:00","Level":"INFO","Event":"App","ClientIp":"","Command":"","Response":"","Message":"Paths: cfg=C:\\Users\\Admin\\Source\\Repos\\BankNodeP2P\\BankNodeP2P\\bin\\Debug\\net8.0-windows\\data\\appsettings.json logs=C:\\Users\\Admin\\Source\\Repos\\BankNodeP2P\\BankNodeP2P\\bin\\Debug\\net8.0-windows\\data\\logs.jsonl state=C:\\Users\\Admin\\Source\\Repos\\BankNodeP2P\\BankNodeP2P\\bin\\Debug\\net8.0-windows\\data\\bank-state.json"}
+{"Timestamp":"2026-01-28T15:09:42.8235029+01:00","Level":"INFO","Event":"App","ClientIp":"","Command":"","Response":"","Message":"Application started"}
+{"Timestamp":"2026-01-28T15:09:46.3236222+01:00","Level":"WARN","Event":"UI","ClientIp":"","Command":"","Response":"","Message":"Start clicked, but controller not attached yet."}
+{"Timestamp":"2026-01-28T15:09:56.1939755+01:00","Level":"WARN","Event":"UI","ClientIp":"","Command":"","Response":"","Message":"Start clicked, but controller not attached yet."}
+{"Timestamp":"2026-01-28T15:20:03.4415547+01:00","Level":"INFO","Event":"App","ClientIp":"","Command":"","Response":"","Message":"Composition built. BankIp=127.0.0.1 Port=65530"}
+{"Timestamp":"2026-01-28T15:20:03.4783489+01:00","Level":"INFO","Event":"App","ClientIp":"","Command":"","Response":"","Message":"Timeouts: cmd=5000ms idle=15000ms"}
+{"Timestamp":"2026-01-28T15:20:03.4807112+01:00","Level":"INFO","Event":"App","ClientIp":"","Command":"","Response":"","Message":"Paths: cfg=C:\\Users\\Admin\\Source\\Repos\\BankNodeP2P\\BankNodeP2P\\bin\\Debug\\net8.0-windows\\data\\appsettings.json logs=C:\\Users\\Admin\\Source\\Repos\\BankNodeP2P\\BankNodeP2P\\bin\\Debug\\net8.0-windows\\data\\logs.jsonl state=C:\\Users\\Admin\\Source\\Repos\\BankNodeP2P\\BankNodeP2P\\bin\\Debug\\net8.0-windows\\data\\bank-state.json"}
+{"Timestamp":"2026-01-28T15:20:03.6267452+01:00","Level":"INFO","Event":"App","ClientIp":"","Command":"","Response":"","Message":"Application started"}
+{"Timestamp":"2026-01-28T15:20:05.3490288+01:00","Level":"WARN","Event":"UI","ClientIp":"","Command":"","Response":"","Message":"Start clicked, but controller not attached yet."}
