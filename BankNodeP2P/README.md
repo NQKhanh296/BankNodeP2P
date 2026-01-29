@@ -70,7 +70,7 @@ Data jsou zachována i po restartu aplikace.
 Hotová verze aplikace je připravena ke spuštění **bez potřeby Visual Studia**.
 
 ### 📦 Stažení
-Zabalená (release) verze aplikace je dostupná ve složce: `BankNodeP2P/bin/Release/`.
+Zabalená (release) verze aplikace je dostupná ve složce: `BankNodeP2P/Release/`.
 
 V této složce se nachází **ZIP archiv**:
 - `BankNodeP2P.zip`
