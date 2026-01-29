@@ -17,4 +17,8 @@
     <None Remove="config\**" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="release1\" />
+  </ItemGroup>
+
 </Project>
