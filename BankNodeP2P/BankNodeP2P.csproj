@@ -9,32 +9,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="bin\**" />
     <Compile Remove="config\**" />
+    <EmbeddedResource Remove="bin\**" />
     <EmbeddedResource Remove="config\**" />
+    <None Remove="bin\**" />
     <None Remove="config\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="bin\Debug\net8.0-windows\BankNodeP2P.deps.json" />
-    <Content Include="bin\Debug\net8.0-windows\BankNodeP2P.runtimeconfig.json" />
-    <Content Include="bin\Debug\net8.0-windows\data\bank-state.json" />
-    <Content Include="bin\Release\BankNodeP2P.deps.json" />
-    <Content Include="bin\Release\BankNodeP2P.runtimeconfig.json" />
-    <Content Include="bin\Release\net8.0-windows\BankNodeP2P.deps.json" />
-    <Content Include="bin\Release\net8.0-windows\BankNodeP2P.runtimeconfig.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="bin\Debug\net8.0-windows\BankNodeP2P.dll" />
-    <None Include="bin\Debug\net8.0-windows\BankNodeP2P.exe" />
-    <None Include="bin\Debug\net8.0-windows\BankNodeP2P.pdb" />
-    <None Include="bin\Debug\net8.0-windows\data\logs.jsonl" />
-    <None Include="bin\Release\BankNodeP2P.dll" />
-    <None Include="bin\Release\BankNodeP2P.exe" />
-    <None Include="bin\Release\BankNodeP2P.pdb" />
-    <None Include="bin\Release\net8.0-windows\BankNodeP2P.dll" />
-    <None Include="bin\Release\net8.0-windows\BankNodeP2P.exe" />
-    <None Include="bin\Release\net8.0-windows\BankNodeP2P.pdb" />
   </ItemGroup>
 
 </Project>
