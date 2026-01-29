@@ -269,7 +269,7 @@ public partial class MainForm : Form
         // 
         nudPort.Location = new Point(290, 12);
         nudPort.Maximum = new decimal(new int[] { 65535, 0, 0, 0 });
-        nudPort.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+        nudPort.Minimum = new decimal(new int[] { 65525, 0, 0, 0 });
         nudPort.Name = "nudPort";
         nudPort.Size = new Size(90, 27);
         nudPort.TabIndex = 3;
